@@ -1,0 +1,29 @@
+.TH MIWPS\-VM 1 "06 January 22"
+.SH NAME
+miwps\-vm \- MIWPS emulator
+.SH SYNOPSIS
+.B miwps\-vm
+[ \fB\-j\fR | \fB\-\-jit\fR ]
+[ \fB\-b\fR \fIBOARD\fR | \fB\-\-board\fR \fIBOARD\fR]
+.IR rom.bin
+.SH DESCRIPTION
+.B miwps-vm
+emulate MIWPS processor and miwps based boards.
+.SH FLAGS
+.TP
+.BR \-j ", " \-\-jit
+Activate jit.
+.TP
+.BR \-h ", " \-\-help
+Show help menu
+.TP
+.BR \-v ", " \-\-version
+Show program version
+.SH OPTIONS
+.TP
+.BR \-b ", " \-\-board =\fIBOARD\fR
+Set the current board to emulate.
+Default: minimiwps
+.SH BUGS
+There is no bug.
+

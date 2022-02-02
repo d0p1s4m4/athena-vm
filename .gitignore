@@ -1,0 +1,6 @@
+*.o
+toolchain/
+*.bin
+miwps-vm
+
+.vscode/
