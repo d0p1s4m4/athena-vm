@@ -2,5 +2,6 @@
 toolchain/
 *.bin
 miwps-vm
+athena-vm
 
 .vscode/

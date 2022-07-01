@@ -1,26 +1,26 @@
 /*
  * Copyright (C) 2022 d0p1 <contact[at]d0p1.eu>
  *
- * This file is part of miwps-vm.
+ * This file is part of athena-vm.
  *
- * miwps-vm is free software: you can redistribute it and/or modify
+ * athena-vm is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
  *
- * miwps-vm is distributed in the hope that it will be useful,
+ * athena-vm is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with miwps-vm.  If not, see <http://www.gnu.org/licenses/>.
+ * along with athena-vm.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include <miwps/opt.h>
+#include <athena/opt.h>
 
 #define IS_OPTARG(s, l) argv[index][1] == s || \
 					 strcmp(argv[index] + 1, "-" l) == 0
@@ -44,7 +44,7 @@ show_help(char const *prg_name)
 	printf("\t-h,--help\tDisplay this information.\n");
 	printf("\t-j,--jit\tEnable JIT\n");
 	printf("Options:\n");
-	printf("\t-b,--board <board>\tSpecify board (default: minimiwps)");
+	printf("\t-b,--board <board>\tSpecify board (default: miniathena)");
 	exit(EXIT_SUCCESS);
 }
 

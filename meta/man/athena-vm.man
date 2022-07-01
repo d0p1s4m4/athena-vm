@@ -1,14 +1,14 @@
-.TH MIWPS\-VM 1 "06 January 22"
+.TH Athena\-VM 1 "06 January 22"
 .SH NAME
-miwps\-vm \- MIWPS emulator
+athena\-vm \- Athena emulator
 .SH SYNOPSIS
-.B miwps\-vm
+.B athena\-vm
 [ \fB\-j\fR | \fB\-\-jit\fR ]
 [ \fB\-b\fR \fIBOARD\fR | \fB\-\-board\fR \fIBOARD\fR]
 .IR rom.bin
 .SH DESCRIPTION
-.B miwps-vm
-emulate MIWPS processor and miwps based boards.
+.B athena-vm
+emulate Athena processor and athena based boards.
 .SH FLAGS
 .TP
 .BR \-j ", " \-\-jit
@@ -23,7 +23,7 @@ Show program version
 .TP
 .BR \-b ", " \-\-board =\fIBOARD\fR
 Set the current board to emulate.
-Default: minimiwps
+Default: miniathena
 .SH BUGS
 There is no bug.
 
