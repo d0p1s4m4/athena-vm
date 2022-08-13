@@ -16,8 +16,6 @@ Activate jit.
 .TP
 .BR \-\-dump\-asm
 .TP
-.BR \-\-dump\-regs
-.TP
 .BR \-h ", " \-\-help
 Show help menu
 .TP
@@ -28,6 +26,8 @@ Show program version
 .BR \-b ", " \-\-board =\fIBOARD\fR
 Set the current board to emulate.
 Default: miniathena
+.TP
+.BR \-\-dump\-regs =[\fInormal\fR|\fIpretty\fR]
 .SH BUGS
 There is no bug.
 

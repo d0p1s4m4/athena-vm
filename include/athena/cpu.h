@@ -23,6 +23,7 @@
 # include <stdint.h>
 
 # define CPU_VENDOR 0x564d564d
+# define CPU_REG_COUNT 32
 
 typedef enum
 {
@@ -96,7 +97,7 @@ typedef enum
 } SpecialReg;
 
 typedef struct {
-	uint32_t registers[32];
+	uint32_t registers[CPU_REG_COUNT];
 	uint32_t special_registers[SR_END];
 	uint32_t pc;
 } Cpu;

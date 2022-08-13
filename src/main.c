@@ -25,6 +25,7 @@
 #include <athena/opt.h>
 #include <athena/cpu.h>
 #include <athena/board.h>
+#include <athena/dump.h>
 
 #define IS_OPTARG(s, l) argv[index][1] == s || \
 					 strcmp(argv[index] + 1, "-" l) == 0
@@ -33,9 +34,7 @@
 
 #define GET_OPT_VALUE() impl_opt_get_value(argc, argv, &index)
 
-#define FLAGS_JIT       0x1
-#define FLAGS_DUMP_ASM  0x2
-#define FLAGS_DUMP_REGS 0x4
+#define GET_OPT_VALUE_OR_DEFAULT(x) impl_opt_get_value_or_default(argc, argv, &index, x)
 
 static void
 show_error_usage(char const *prg_name)
@@ -86,10 +85,33 @@ impl_opt_get_value(int argc, char const *argv[], int *index)
 	return ((char *)argv[*index]);
 }
 
+static char *
+impl_opt_get_value_or_default(int argc, char const *argv[], int *index, char *fallback)
+{
+	int tmp;
+
+	tmp = *index + 1;
+
+	if (tmp >= argc)
+	{
+		return (fallback);
+	}
+
+	if (argv[tmp][0] == '-')
+	{
+		return (fallback);
+	}
+
+	*index = tmp;
+	/* XXX: ugly as fuck */
+	return ((char *)argv[*index]);
+}
+
 static int
 parse_flags(int argc, char const *argv[], Opt *opt)
 {
 	int index;
+	char *val;
 
 	opt->flags = 0x0;
 
@@ -107,7 +129,7 @@ parse_flags(int argc, char const *argv[], Opt *opt)
 			}
 			else if (IS_OPTARG('j', "jit"))
 			{
-				opt->flags |= FLAGS_JIT;
+				opt->flags |= OPT_FLAG_JIT;
 			}
 			else if (IS_OPTARG('b', "board"))
 			{
@@ -115,11 +137,25 @@ parse_flags(int argc, char const *argv[], Opt *opt)
 			}
 			else if (IS_OPTLONGARG("dump-asm"))
 			{
-				opt->flags |= FLAGS_DUMP_ASM;
+				opt->flags |= OPT_FLAG_DUMP_ASM;
 			}
 			else if (IS_OPTLONGARG("dump-regs"))
 			{
-				opt->flags |= FLAGS_DUMP_REGS;
+				val = GET_OPT_VALUE_OR_DEFAULT("normal");
+
+				if (strcmp("normal", val) == 0)
+				{
+					opt->dump_regs = DUMP_REGS_NORMAL;
+				}
+				else if (strcmp("pretty", val) == 0)
+				{
+					opt->dump_regs = DUMP_REGS_PRETTY; 
+				}
+				else
+				{
+					opt->dump_regs = DUMP_REGS_NORMAL;
+					index--;
+				}
 			}
 			else
 			{
@@ -135,11 +171,10 @@ parse_flags(int argc, char const *argv[], Opt *opt)
 }
 
 int
-load_rom(char const *rom)
+load_rom(Opt *opt, char const *rom)
 {
 	Board board;
 	int fd;
-	/*int idx;*/
 
 	printf("Rom %s\n", rom);
 
@@ -161,22 +196,8 @@ load_rom(char const *rom)
 	while (1)
 	{
 		cpu_cycle(&board.cpu, board.memory);
-/*
 
-		if (fgetc(stdin) == 'r')
-		{
-			for (idx = 0; idx < 32; idx++)
-			{
-				printf("\033[32mr%d\033[0m: %06X ", idx, board.cpu.registers[idx]);
-				if (idx % 5 == 0 && idx != 0)
-				{
-					printf("\n");
-				}
-			}
-			printf("\n");
-			fgetc(stdin);
-		}
-		*/
+		dump_registers(&board.cpu, opt->dump_regs);
 	}
 
 	close(fd);
@@ -200,5 +221,5 @@ main(int argc, char const *argv[])
 	{
 		show_error_usage(argv[0]);
 	}
-	return (load_rom(argv[index]));
+	return (load_rom(&opt, argv[index]));
 }
