@@ -1,0 +1,8 @@
+-I include/
+-Wall
+-Wextra
+-Werror
+-ansi
+-pedantic
+-Wno-variadic-macros
+-D_DEFAULT_SOURCE

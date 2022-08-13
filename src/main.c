@@ -19,15 +19,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include <athena/opt.h>
+#include <athena/cpu.h>
+#include <athena/board.h>
 
 #define IS_OPTARG(s, l) argv[index][1] == s || \
 					 strcmp(argv[index] + 1, "-" l) == 0
 
+#define IS_OPTLONGARG(l) strcmp(argv[index] + 1, "-" l) == 0
+
 #define GET_OPT_VALUE() impl_opt_get_value(argc, argv, &index)
 
-#define FLAGS_JIT 0x1
+#define FLAGS_JIT       0x1
+#define FLAGS_DUMP_ASM  0x2
+#define FLAGS_DUMP_REGS 0x4
 
 static void
 show_error_usage(char const *prg_name)
@@ -105,6 +113,14 @@ parse_flags(int argc, char const *argv[], Opt *opt)
 			{
 				opt->board = GET_OPT_VALUE();
 			}
+			else if (IS_OPTLONGARG("dump-asm"))
+			{
+				opt->flags |= FLAGS_DUMP_ASM;
+			}
+			else if (IS_OPTLONGARG("dump-regs"))
+			{
+				opt->flags |= FLAGS_DUMP_REGS;
+			}
 			else
 			{
 				show_error_usage(argv[0]);
@@ -121,7 +137,50 @@ parse_flags(int argc, char const *argv[], Opt *opt)
 int
 load_rom(char const *rom)
 {
+	Board board;
+	int fd;
+	/*int idx;*/
+
 	printf("Rom %s\n", rom);
+
+	fd = open(rom, O_RDONLY);
+	if (fd < 0)
+	{
+		return (-1);
+	}
+
+	memset(&board, 0, sizeof(Board));
+
+	if (read(fd, board.memory, 512) < 0)
+	{
+		perror("???");
+	}
+
+	cpu_initialize(&board.cpu);
+
+	while (1)
+	{
+		cpu_cycle(&board.cpu, board.memory);
+/*
+
+		if (fgetc(stdin) == 'r')
+		{
+			for (idx = 0; idx < 32; idx++)
+			{
+				printf("\033[32mr%d\033[0m: %06X ", idx, board.cpu.registers[idx]);
+				if (idx % 5 == 0 && idx != 0)
+				{
+					printf("\n");
+				}
+			}
+			printf("\n");
+			fgetc(stdin);
+		}
+		*/
+	}
+
+	close(fd);
+
 	return (0);
 }
 
@@ -135,6 +194,7 @@ main(int argc, char const *argv[])
 	{
 		show_error_usage(argv[0]);
 	}
+	memset(&opt, 0, sizeof(Opt));
 	index = parse_flags(argc, argv, &opt);
 	if (index >= argc)
 	{

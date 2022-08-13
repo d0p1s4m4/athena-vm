@@ -28,10 +28,10 @@ RM	= rm -f
 -include meta/make/host-info.mk
 
 CFLAGS = -Iinclude/ -Wall -Wextra -Werror -ansi -pedantic -Wno-variadic-macros \
-			$(ENV_FLAGS) $(HOST_INFO_FLAGS)
+			$(ENV_FLAGS) $(HOST_INFO_FLAGS) -D_DEFAULT_SOURCE
 LDFLAGS	= 
 
-SRCS	= main.c
+SRCS	= main.c cpu.c
 OBJS	= $(addprefix src/, $(SRCS:.c=.o))
 
 TARGET = athena-vm

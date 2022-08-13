@@ -14,6 +14,10 @@ emulate Athena processor and athena based boards.
 .BR \-j ", " \-\-jit
 Activate jit.
 .TP
+.BR \-\-dump\-asm
+.TP
+.BR \-\-dump\-regs
+.TP
 .BR \-h ", " \-\-help
 Show help menu
 .TP
