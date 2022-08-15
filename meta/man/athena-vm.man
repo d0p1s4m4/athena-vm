@@ -14,8 +14,6 @@ emulate Athena processor and athena based boards.
 .BR \-j ", " \-\-jit
 Activate jit.
 .TP
-.BR \-\-dump\-asm
-.TP
 .BR \-h ", " \-\-help
 Show help menu
 .TP
@@ -28,6 +26,8 @@ Set the current board to emulate.
 Default: miniathena
 .TP
 .BR \-\-dump\-regs =[\fInormal\fR|\fIpretty\fR]
+.TP
+.BR \-\-dump\-asm =[\fInormal\fR|\fIpretty\fR]
 .SH BUGS
 There is no bug.
 

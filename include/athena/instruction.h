@@ -17,24 +17,31 @@
  * along with athena-vm.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ATHENA_VM_OPT_H
-# define ATHENA_VM_OPT_H 1
+#ifndef ATHENA_VM_INSTRUCTION_H
+# define ATHENA_VM_INSTRUCTION_H 1
 
 # include <stdint.h>
 
-# define OPT_FLAG_JIT       0x1
+typedef enum
+{
+    INSTR_REG,
+    INSTR_REG4,
+    INSTR_SHIFT,
+    INSTR_IMM,
+    INSTR_JUMP,
+    INSTR_LOAD,
+	INSTR_STORE,
+    INSTR_SINGLE
+} InstructionType;
 
-typedef enum {
-	DUMP_REGS_NONE = 0,
-	DUMP_REGS_NORMAL,
-	DUMP_REGS_PRETTY
-} OptDumpRegs;
 
-typedef struct {
-	uint32_t flags;
-	char *board;
-	OptDumpRegs dump_regs;
-	OptDumpRegs dump_asm;
-} Opt;
+typedef struct
+{
+    uint32_t opcode;
+    uint32_t mask;
+    char *name;
+    InstructionType type;
+    void (*jit)();
+} InstructionInfo;
 
-#endif /* !ATHENA_VM_OPT_H */
+#endif /* !ATHENA_VM_INSTRUCTION_H */

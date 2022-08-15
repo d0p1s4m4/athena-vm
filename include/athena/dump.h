@@ -21,6 +21,7 @@
 # define ATHENA_VM_DUMP_H 1
 
 # include <stdint.h>
+# include <athena/board.h>
 
 # define DUMP_REGISTERS_NAME \
     "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", \
@@ -29,11 +30,12 @@
     "r27", "r28", "r29", "r30", "r31"
 
 # define DUMP_REGISTERS_PRETTY_NAME \
-    "zero", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7" \
-    "a0", "a1", "r11", "r12", "13", "r14", "r15", "r16", "r17", \
+    "zero", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", \
+    "a0", "a1", "r11", "r12", "r13", "r14", "r15", "r16", "r17", \
     "r18", "r19", "r20", "r21", "r22", "r23", "r24", "k0", "k1", \
     "at", "sp", "gp", "fp", "ra"
 
 void dump_registers(Cpu *, OptDumpRegs);
+void dump_assembly(Board *, OptDumpRegs);
 
 #endif /* !ATHENA_VM_DUMP_H */

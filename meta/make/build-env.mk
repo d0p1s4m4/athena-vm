@@ -1,9 +1,10 @@
 BUILD_ENV ?= debug
 
 ifeq ($(BUILD_ENV), debug)
-	ENV_FLAGS	:= -g -ggdb -O0
+	ENV_CFLAGS	:= -g -ggdb -O0 -fsanitize=address -fsanitize=undefined
+	ENV_LDFLAGS	:= -lasan -lubsan
 else
-	ENV_FLAGS	:= -DNDEBUG
+	ENV_CFLAGS	:= -DNDEBUG
 endif
 
-ENV_FLAGS	:= -DVERSION=\"0\"
+ENV_CFLAGS	+= -DVERSION=\"0\"

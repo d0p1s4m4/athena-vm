@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2022 d0p1 <contact[at]d0p1.eu>
+ *
+ * This file is part of athena-vm.
+ *
+ * athena-vm is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * athena-vm is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with athena-vm.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -70,11 +88,9 @@ cpu_execute_rformat(Cpu *cpu, uint32_t instr)
 	{
 		case F_NOP:
 			/* do nothing */
-			printf("NOP\n");
 			break;
 
 		case F_ADD:
-			printf("ADD r%d, r%d, r%d\n", ra, rb, rc);
 			if (__builtin_sadd_overflow((int)cpu_get_register(cpu, rb), (int)cpu_get_register(cpu, rc), &i32res))
 			{
 				exit(-1);
@@ -193,8 +209,11 @@ cpu_cycle(Cpu *cpu, uint8_t *memory)
 
 	/* fetch */
 	instr = be32toh(*(uint32_t *)(memory + cpu->pc));
-	printf("[pc: %06X] ", cpu->pc);
 	cpu->pc += 4;
+	if (cpu->pc >= 512)
+	{
+		exit(0);
+	}
 
 	/* decode */
 	opcode = instr & 0x3F;
@@ -211,7 +230,6 @@ cpu_cycle(Cpu *cpu, uint8_t *memory)
 			break;
 
 		case OP_ADDI:
-			printf("ADDI r%d, r%d, %d\n", ra, rb, imm);
 			if (__builtin_sadd_overflow((int)cpu_get_register(cpu, rb), (int)imm, &i32res))
 			{
 				/* TODO: integer overflow */
@@ -229,7 +247,6 @@ cpu_cycle(Cpu *cpu, uint8_t *memory)
 			break;
 
 		case OP_SUBI:
-			printf("SUBI r%d, r%d, %d\n", ra, rb, imm);
 			if (__builtin_ssub_overflow((int)cpu_get_register(cpu, rb), (int)imm, &i32res))
 			{
 				/* TODO: integer overflow */
@@ -249,7 +266,6 @@ cpu_cycle(Cpu *cpu, uint8_t *memory)
 			break;
 
 		case OP_ORI:
-			printf("ORI r%d, r%d, %d\n", ra, rb, imm);
 			cpu_set_register(cpu, ra, cpu_get_register(cpu, rb) | (uint32_t)imm);
 			break;
 
@@ -264,7 +280,6 @@ cpu_cycle(Cpu *cpu, uint8_t *memory)
 			break;
 
 		case OP_JMP:
-			printf("JMP r%d, %d\n", ra, jump_offset);
 			cpu->pc = cpu_get_register(cpu, ra) + (jump_offset * 4);
 			break;
 
@@ -276,13 +291,11 @@ cpu_cycle(Cpu *cpu, uint8_t *memory)
 			break;
 
 		case OP_CALL:
-			printf("CALL r%d, %d\n", ra, jump_offset);
 			cpu->registers[31] = cpu->pc;
 			cpu->pc = cpu_get_register(cpu, ra) + (jump_offset * 4);
 			break;
 
 		case OP_BEQ:
-			printf("BEQ r%d, r%d, %d\n", ra, rb, imm);
 			if (cpu_get_register(cpu, ra) == cpu_get_register(cpu, rb))
 			{
 				cpu->pc = cpu->pc + (int32_t)(imm * 4);
@@ -290,7 +303,6 @@ cpu_cycle(Cpu *cpu, uint8_t *memory)
 			break;
 
 		case OP_BNE:
-			printf("BNE r%d, r%d, %d\n", ra, rb, imm);
 			if (cpu_get_register(cpu, ra) != cpu_get_register(cpu, rb))
 			{
 				cpu->pc = cpu->pc + (int32_t)(imm * 4);
@@ -298,7 +310,6 @@ cpu_cycle(Cpu *cpu, uint8_t *memory)
 			break;
 
 		case OP_BLT:
-			printf("BLT r%d, r%d, %d\n", ra, rb, imm);
 			if ((int32_t)cpu_get_register(cpu, ra) < (int32_t)cpu_get_register(cpu, rb))
 			{
 				cpu->pc = cpu->pc + (int32_t)(imm * 4);
@@ -306,7 +317,6 @@ cpu_cycle(Cpu *cpu, uint8_t *memory)
 			break;
 
 		case OP_BGT:
-			printf("BGT r%d, r%d, %d\n", ra, rb, imm);
 			if ((int32_t)cpu_get_register(cpu, ra) > (int32_t)cpu_get_register(cpu, rb))
 			{
 				cpu->pc = cpu->pc + (int32_t)(imm * 4);

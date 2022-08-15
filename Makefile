@@ -28,8 +28,8 @@ RM	= rm -f
 -include meta/make/host-info.mk
 
 CFLAGS = -Iinclude/ -Wall -Wextra -Werror -ansi -pedantic -Wno-variadic-macros \
-			$(ENV_FLAGS) $(HOST_INFO_FLAGS) -D_DEFAULT_SOURCE
-LDFLAGS	= 
+			$(ENV_CFLAGS) $(HOST_INFO_FLAGS) -D_DEFAULT_SOURCE
+LDFLAGS	= $(ENV_LDFLAGS)
 
 SRCS	= main.c cpu.c dump.c
 OBJS	= $(addprefix src/, $(SRCS:.c=.o))

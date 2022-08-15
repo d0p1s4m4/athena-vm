@@ -137,7 +137,21 @@ parse_flags(int argc, char const *argv[], Opt *opt)
 			}
 			else if (IS_OPTLONGARG("dump-asm"))
 			{
-				opt->flags |= OPT_FLAG_DUMP_ASM;
+				val = GET_OPT_VALUE_OR_DEFAULT("normal");
+
+				if (strcmp("normal", val) == 0)
+				{
+					opt->dump_asm = DUMP_REGS_NORMAL;
+				}
+				else if (strcmp("pretty", val) == 0)
+				{
+					opt->dump_asm = DUMP_REGS_PRETTY; 
+				}
+				else
+				{
+					opt->dump_asm = DUMP_REGS_NORMAL;
+					index--;
+				}
 			}
 			else if (IS_OPTLONGARG("dump-regs"))
 			{
@@ -195,6 +209,8 @@ load_rom(Opt *opt, char const *rom)
 
 	while (1)
 	{
+		dump_assembly(&board, opt->dump_asm);
+
 		cpu_cycle(&board.cpu, board.memory);
 
 		dump_registers(&board.cpu, opt->dump_regs);
