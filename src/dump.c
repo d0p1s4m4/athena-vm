@@ -141,7 +141,8 @@ dump_assembly(Board *board, OptDumpRegs format)
 		regname = pretty_registers_name;
 	}
 
-	instr =  be32toh(*(uint32_t *)(board->memory + board->cpu.pc));
+	instr = be32toh(memory_load32(&board->memory, board->cpu.pc ));
+
 	printf("0x%08X:\t", board->cpu.pc);
 	for (idx = 0; instruction[idx].name != NULL; idx++)
 	{

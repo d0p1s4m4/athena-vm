@@ -21,6 +21,7 @@
 # define ATHENA_VM_CPU_H 1
 
 # include <stdint.h>
+# include <athena/memory.h>
 
 # define CPU_VENDOR 0x564d564d
 # define CPU_REG_COUNT 32
@@ -104,6 +105,6 @@ typedef struct {
 
 
 void cpu_initialize(Cpu *cpu);
-void cpu_cycle(Cpu *cpu, uint8_t *memory);
+void cpu_cycle(Cpu *cpu, Memory* memory);
 
 #endif /* !ATHENA_VM_CPU_H */

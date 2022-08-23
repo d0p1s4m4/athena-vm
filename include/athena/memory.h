@@ -17,16 +17,30 @@
  * along with athena-vm.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ATHENA_VM_BOARD_H
-# define ATHENA_VM_BOARD_H 1
+#ifndef ATHENA_VM_MEMORY_H
+# define ATHENA_VM_MEMORY_H 1
 
-# include <athena/cpu.h>
-# include <athena/memory.h>
 # include <stdint.h>
 
-typedef struct {
-	Cpu cpu;
-	Memory memory;
-} Board;
+/* Maybe you may want to use something else than just binary data
+ * but it will be easier to implement an MMU later on.
+ */
 
-#endif /* !ATHENA_VM_BOARD_H */
+typedef struct {
+	uint32_t size;
+	uint8_t *physical_data;
+} Memory;
+
+void memory_initialize(Memory *memory, uint32_t size);
+
+void memory_deinitialize(Memory *memory);
+
+void memory_load_from_file(Memory *memory, uint32_t base, uint32_t size, int fd);
+
+uint32_t memory_load32(Memory *memory, uint32_t address);
+
+void memory_write32(Memory *memory, uint32_t address, uint32_t value);
+
+uint8_t* memory_ptr(Memory *memory, uint32_t address);
+
+#endif /* !ATHENA_VM_MEMORY_H */

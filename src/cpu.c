@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <endian.h>
 #include <athena/cpu.h>
+#include <athena/memory.h>
 
 static uint32_t
 cpu_get_register(Cpu *cpu, uint8_t reg)
@@ -197,7 +198,7 @@ cpu_execute_rformat(Cpu *cpu, uint32_t instr)
 }
 
 void
-cpu_cycle(Cpu *cpu, uint8_t *memory)
+cpu_cycle(Cpu *cpu, Memory *memory)
 {
 	uint32_t instr;
 	uint8_t opcode;
@@ -208,7 +209,7 @@ cpu_cycle(Cpu *cpu, uint8_t *memory)
 	int32_t i32res;
 
 	/* fetch */
-	instr = be32toh(*(uint32_t *)(memory + cpu->pc));
+	instr = be32toh(memory_load32(memory, cpu->pc));
 	cpu->pc += 4;
 	if (cpu->pc >= 512)
 	{
