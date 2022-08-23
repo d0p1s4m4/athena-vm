@@ -31,7 +31,7 @@ CFLAGS = -Iinclude/ -Wall -Wextra -Werror -ansi -pedantic -Wno-variadic-macros \
 			$(ENV_CFLAGS) $(HOST_INFO_FLAGS) -D_DEFAULT_SOURCE
 LDFLAGS	= $(ENV_LDFLAGS)
 
-SRCS	= main.c cpu.c dump.c
+SRCS	= main.c cpu.c dump.c memory.c
 OBJS	= $(addprefix src/, $(SRCS:.c=.o))
 
 TARGET = athena-vm

@@ -200,10 +200,8 @@ load_rom(Opt *opt, char const *rom)
 
 	memset(&board, 0, sizeof(Board));
 
-	if (read(fd, board.memory, 512) < 0)
-	{
-		perror("???");
-	}
+	memory_initialize(&board.memory, 512);
+	memory_load_from_file(&board.memory, 0, 512, fd);
 
 	cpu_initialize(&board.cpu);
 
@@ -211,7 +209,7 @@ load_rom(Opt *opt, char const *rom)
 	{
 		dump_assembly(&board, opt->dump_asm);
 
-		cpu_cycle(&board.cpu, board.memory);
+		cpu_cycle(&board.cpu, &board.memory);
 
 		dump_registers(&board.cpu, opt->dump_regs);
 	}
